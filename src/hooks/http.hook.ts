@@ -45,6 +45,6 @@ export const useHttp = () => {
         [],
     );
 
-    // return {loadingStatus, request};
-    return [loadingStatus, request] as const;
+    return {loadingStatus, request};
 };
+
