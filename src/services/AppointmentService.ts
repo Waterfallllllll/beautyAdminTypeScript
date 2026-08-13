@@ -8,7 +8,7 @@ const requiredFields = ["id", "date", "name", "service", "phone", "canceled"];
 const useAppointmentService = () => {
     const { loadingStatus, request } = useHttp();
 
-    const _apiBase = "http://localhost:3001/appointment";
+    const _apiBase = "http://localhost:3009/appointments";
 
     const getAllAppointments = async (): Promise<IAppointment[]> => {
         const res = await request({ url: _apiBase });
@@ -45,3 +45,5 @@ const useAppointmentService = () => {
         getAllActiveAppointments
     };
 };
+
+export default useAppointmentService;
