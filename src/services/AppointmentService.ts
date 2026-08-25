@@ -26,7 +26,7 @@ const useAppointmentService = () => {
     const getAllActiveAppointments = async () => {
         const appointments = await getAllAppointments();
 
-        const arr: ActiveAppointment[] = appointments.map((item) => {
+        const arr: ActiveAppointment[] = appointments.filter(item => !item.canceled).map((item) => {
             return {
                 id: item.id,
                 date: item.date,

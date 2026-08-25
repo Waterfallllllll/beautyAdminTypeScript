@@ -5,8 +5,8 @@ import {
 } from "../../shared/interfaces/appointment.interface";
 
 export interface IInitialState {
-    allAppointments: IAppointment | [];
-    activeAppointments: ActiveAppointment | [];
+    allAppointments: IAppointment[] | [];
+    activeAppointments: ActiveAppointment[] | [];
 }
 
 export default function reducer(
