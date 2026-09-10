@@ -17,4 +17,4 @@ export type AppointmentAction = {
     type: ActionsTypes.FETCHING_APPOINTMENTS;
 } | {
     type: ActionsTypes.ERROR_FETCHING_APPOINTMENTS;
-}
+} 

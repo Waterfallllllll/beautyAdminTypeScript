@@ -2,7 +2,10 @@ import { useHttp } from "../hooks/http.hook";
 import hasRequiredFields from "../utils/hasRequiredFields";
 import dayjs from "dayjs";
 
-import { IAppointment, ActiveAppointment } from "../shared/interfaces/appointment.interface";
+import {
+    IAppointment,
+    ActiveAppointment,
+} from "../shared/interfaces/appointment.interface";
 
 const requiredFields = ["id", "date", "name", "service", "phone", "canceled"];
 
@@ -27,25 +30,38 @@ const useAppointmentService = () => {
     const getAllActiveAppointments = async () => {
         const appointments = await getAllAppointments();
 
-        const arr: ActiveAppointment[] = appointments.filter(item => {
-            return !item.canceled && dayjs(item.date).diff(undefined, "minute");
-        }).map((item) => {
-            return {
-                id: item.id,
-                date: item.date,
-                name: item.name,
-                service: item.service,
-                phone: item.phone,
-            }
-        });
+        const arr: ActiveAppointment[] = appointments
+            .filter((item) => {
+                return (
+                    !item.canceled && dayjs(item.date).diff(undefined, "minute")
+                );
+            })
+            .map((item) => {
+                return {
+                    id: item.id,
+                    date: item.date,
+                    name: item.name,
+                    service: item.service,
+                    phone: item.phone,
+                };
+            });
 
         return arr;
-    }
+    };
+
+    const modifyCancelDbData = async (id: number) => {
+        return await request({
+            url: `${_apiBase}/${id}`,
+            method: "PATCH",
+            body: JSON.stringify({ canceled: true }),
+        });
+    };
 
     return {
         loadingStatus,
         getAllAppointments,
-        getAllActiveAppointments
+        getAllActiveAppointments,
+        modifyCancelDbData
     };
 };
 

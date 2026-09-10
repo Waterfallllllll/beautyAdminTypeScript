@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import "./appointmentItem.scss";
 import dayjs from "dayjs";
 import { Optional } from "utility-types";
@@ -8,13 +8,13 @@ import { IAppointment } from "../../shared/interfaces/appointment.interface";
 // type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 type AppointmentProps = Optional<IAppointment, "canceled"> & {
-    openModal: (state: boolean) => void;
-    selectId: () => void;
+    openModal: (state: number) => void;
 };
 
-function AppointmentItem(props: AppointmentProps) {
+const AppointmentItem = memo((props: AppointmentProps) => {
     const [timeLeft, changeTimeLeft] = useState<string | null>(null);
-    const { date, name, service, phone, canceled, openModal, selectId } = props;
+    const { id, date, name, service, phone, canceled, openModal } = props;
+    const [visible, setVisible] = useState(true);
 
     useEffect(() => {
         changeTimeLeft(
@@ -32,7 +32,19 @@ function AppointmentItem(props: AppointmentProps) {
         };
     }, [date]);
 
+    useEffect(() => {
+        if (timeLeft === null) {
+        } else if (timeLeft <= "0:0") {
+            setVisible(false);
+        }
+    }, [timeLeft]);
+
+    if (!visible) {
+        return null;
+    }
+
     const formattedDate = dayjs(date).format("DD/MM/YYYY HH:mm");
+
     return (
         <div className="appointment">
             <div className="appointment__info">
@@ -50,8 +62,7 @@ function AppointmentItem(props: AppointmentProps) {
                     <button
                         className="appointment__cancel"
                         onClick={() => {
-                            openModal(true);
-                            selectId();
+                            openModal(id);
                         }}
                     >
                         Cancel
@@ -63,6 +74,6 @@ function AppointmentItem(props: AppointmentProps) {
             ) : null}
         </div>
     );
-}
+});
 
 export default AppointmentItem;

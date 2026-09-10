@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback} from "react";
 
 import AppointmentItem from "../appointmentItem.tsx/AppointmentItem";
 import { AppointmentContext } from "../../context/appointments/AppointmentsContext";
@@ -9,8 +9,11 @@ import CancelModal from "../modal/CancelModal";
 import "../../pages/schedule/schedulePage.scss";
 
 function AppointmentList() {
-    const { activeAppointments, getActiveAppointments, appointmentLoadingStatus } =
-        useContext(AppointmentContext);
+    const {
+        activeAppointments,
+        getActiveAppointments,
+        appointmentLoadingStatus,
+    } = useContext(AppointmentContext);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedId, selectId] = useState(0);
 
@@ -18,27 +21,43 @@ function AppointmentList() {
         getActiveAppointments();
     }, []);
 
-    console.log(appointmentLoadingStatus);
+    const handleOpenModal = useCallback((id: number) => {
+        setIsOpen(true);
+        selectId(id);
+    }, []);
 
-	if (appointmentLoadingStatus === "loading") {
-		return <Spinner/>
-	} else if (appointmentLoadingStatus === "error"){
+    if (appointmentLoadingStatus === "loading") {
+        return <Spinner />;
+    } else if (appointmentLoadingStatus === "error") {
         return (
             <>
-                <Error/>
-                <button className="schedule__reload" onClick={getActiveAppointments}>
+                <Error />
+                <button
+                    className="schedule__reload"
+                    onClick={getActiveAppointments}
+                >
                     Try to reload
                 </button>
             </>
         );
-    } 
+    }
 
     return (
         <>
-			{activeAppointments.map(item => {
-				return <AppointmentItem key={item.id} {...item} openModal={setIsOpen} selectId={() => selectId(item.id)}/>
-			})}
-            {isOpen ? <CancelModal handleClose={setIsOpen} selectedId={selectedId} /> : null}           
+            {activeAppointments.map((item) => {
+                return (
+                    <AppointmentItem
+                        key={item.id}
+                        {...item}
+                        openModal={handleOpenModal}
+                    />
+                );
+            })}
+            <CancelModal
+                handleClose={setIsOpen}
+                selectedId={selectedId}
+                isOpen={isOpen}
+            />
         </>
     );
 }

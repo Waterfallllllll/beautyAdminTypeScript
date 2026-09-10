@@ -8,7 +8,7 @@ import { ActionsTypes } from "./actions";
 const initialState: IAppointmentState = {
     allAppointments: [],
     activeAppointments: [],
-    appointmentLoadingStatus: "idle"
+    appointmentLoadingStatus: "idle",
 };
 
 interface ProviderProps {
@@ -30,8 +30,11 @@ export const AppointmentContext = createContext<AppointmentContextValue>({
 
 const AppointmentContextProvider = ({ children }: ProviderProps) => {
     const [state, dispatch] = useReducer(reducer, initialState);
-    const { loadingStatus, getAllAppointments, getAllActiveAppointments } =
-        useAppointmentService();
+    const {
+        loadingStatus,
+        getAllAppointments,
+        getAllActiveAppointments,
+    } = useAppointmentService();
 
     const value: AppointmentContextValue = {
         allAppointments: state.allAppointments,
